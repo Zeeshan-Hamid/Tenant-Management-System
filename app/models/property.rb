@@ -1,29 +1,33 @@
+# app/models/property.rb
 class Property < ApplicationRecord
   has_many :units, dependent: :destroy
   has_many :tenants, through: :units
 
-
   enum property_type: {
-    apartment: 0,
-    house: 1,
-    condo: 2,
-    duplex: 3,
-    townhouse: 4,
-    commercial: 5,
-    villa: 6,
-    loft:7,
-    faram: 8
-
+    apartment: 'apartment',
+    house: 'house', 
+    condo: 'condo',
+    duplex: 'duplex',
+    townhouse: 'townhouse',
+    commercial: 'commercial',
+    villa: 'villa',
+    loft: 'loft',
+    farm: 'farm'
   }
 
-  validates :name, presence: true
-  validates :property_type, presence: true
+  validates :name, :address, :city, :country, :property_type, presence: true
+  validates :zip_code, format: { 
+    with: /\A\d{5}(-\d{4})?\z/, 
+    message: "should be in 12345 or 12345-6789 format",
+    allow_blank: true
+  }
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[name address property_type]
+    %w[name address property_type city country]
   end
 
+ 
   def update_units_count
-    self.update_column(:units_count, units.size)
+    update(units_count: units.count)
   end
 end
