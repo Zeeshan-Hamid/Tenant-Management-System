@@ -33,7 +33,7 @@ gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
-gem 'country_select', '~> 7.0' # Check for latest version
+gem 'country_select', '~> 10.0' # Check for latest version
 gem 'countries' 
 gem 'devise'        # Active Admin depends on Devise for authentication
 gem 'activeadmin'

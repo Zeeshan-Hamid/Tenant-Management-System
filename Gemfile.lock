@@ -110,9 +110,8 @@ GEM
     connection_pool (2.4.1)
     countries (5.7.2)
       unaccent (~> 0.3)
-    country_select (7.0.0)
-      countries (~> 5.0)
-      sort_alphabetical (~> 1.1)
+    country_select (10.0.1)
+      countries (> 5.0, < 8.0)
     crass (1.0.6)
     csv (3.3.0)
     date (3.3.4)
@@ -316,8 +315,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sort_alphabetical (1.1.0)
-      unicode_utils (>= 1.2.2)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -340,7 +337,6 @@ GEM
       concurrent-ruby (~> 1.0)
     unaccent (0.4.0)
     unicode-display_width (2.6.0)
-    unicode_utils (1.4.0)
     useragent (0.16.10)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -371,7 +367,7 @@ DEPENDENCIES
   brakeman
   capybara
   countries
-  country_select (~> 7.0)
+  country_select (~> 10.0)
   debug
   devise
   faker
