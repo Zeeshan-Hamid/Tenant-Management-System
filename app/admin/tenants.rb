@@ -2,28 +2,35 @@
 ActiveAdmin.register Tenant do
   belongs_to :unit
   permit_params :name, :unit_id, :active, :phone, :email, lease_agreement_attributes: [
-    :rent_amount, :start_date, :end_date, :security_deposit, :increment_type, :annual_increment, :unit_id
+    :id, :unit_id, :start_date, :end_date, :rent_amount,
+    :security_deposit, :annual_increment, :increment_frequency, :increment_type
   ]
 
   filter :name
 
   form do |f|
     f.inputs "Tenant Details" do
+      f.input :unit
       f.input :name
       f.input :phone
       f.input :email
+      f.input :active
+    end
 
-      f.inputs "Lease Agreement", for: [:lease_agreement, f.object.lease_agreement || LeaseAgreement.new] do |lease_form|
-        lease_form.input :rent_amount
-        lease_form.input :start_date, as: :datepicker
-        lease_form.input :end_date, as: :datepicker
-        lease_form.input :security_deposit
-        lease_form.input :increment_type, as: :select, collection: ['fixed', 'percentage']
-        lease_form.input :annual_increment
-        lease_form.input :unit_id, as: :hidden, input_html: { value: params[:unit_id] }
+    f.inputs "Lease Agreement" do
+      f.has_many :lease_agreement, new_record: true do |la|
+        la.input :start_date, as: :datepicker
+        la.input :end_date, as: :datepicker
+        
+        la.input :security_deposit
+        la.input :annual_increment
+        la.input :increment_frequency, as: :select, collection: %w[yearly quarterly]
+        la.input :increment_type, as: :select, collection: %w[fixed percentage]
       end
     end
+
     f.actions
+  
   end
 
   controller do
@@ -48,5 +55,38 @@ ActiveAdmin.register Tenant do
         ]
       )
     end
+  end
+end
+
+# app/admin/tenant.rb
+ActiveAdmin.register Tenant do
+  permit_params :name, :phone, :email, :unit_id, :active,
+                lease_agreement_attributes: [
+                  :id, :unit_id, :start_date, :end_date, :rent_amount,
+                  :security_deposit, :annual_increment, :increment_frequency, :increment_type
+                ]
+
+  form do |f|
+    f.inputs "Tenant Details" do
+      f.input :unit
+      f.input :name
+      f.input :phone
+      f.input :email
+      f.input :active
+    end
+
+    f.inputs "Lease Agreement" do
+      f.has_many :lease_agreement, new_record: true do |la|
+        la.input :start_date, as: :datepicker
+        la.input :end_date, as: :datepicker
+        la.input :rent_amount
+        la.input :security_deposit
+        la.input :annual_increment
+        la.input :increment_frequency, as: :select, collection: %w[yearly quarterly]
+        la.input :increment_type, as: :select, collection: %w[fixed percentage]
+      end
+    end
+
+    f.actions
   end
 end

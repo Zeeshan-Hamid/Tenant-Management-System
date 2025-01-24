@@ -41,9 +41,12 @@ gem 'sassc-rails'
 gem 'faker'
 gem 'rubocop', require: false
 gem 'rubocop-rails', require: false # Optional, for Rails-specific linting
-gem 'sidekiq'
+
 gem 'whenever', require: false
 
+gem 'sucker_punch'
+
+gem 'whenever', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

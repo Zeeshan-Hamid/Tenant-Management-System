@@ -1,14 +1,14 @@
 class Unit < ApplicationRecord
   belongs_to :property, counter_cache: true
-  has_many :tenants
+  has_many :tenants, dependent: :destroy  
   has_many :lease_agreements, dependent: :destroy
   has_many :rents, dependent: :destroy
   
   enum status: {
-    available_for_rent: 'available_for_rent',
-    available_for_selling: 'available_for_selling',
-    sold: 'sold',
-    not_available: 'not_available'
+    available_for_rent: '0',
+    available_for_selling: '1',
+    sold: '2',
+    not_available: '3'
   }
 
   validates :unit_number, presence: true
@@ -19,10 +19,10 @@ class Unit < ApplicationRecord
   after_save :update_property_units_count
   after_destroy :update_property_units_count
 
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(auth_object = nil)  #ransack association to link with property
     ["property"]
   end
-  def self.ransackable_attributes(auth_object = nil)
+  def self.ransackable_attributes(auth_object = nil) # search attributes for units
     %w[
       created_at 
       floor 

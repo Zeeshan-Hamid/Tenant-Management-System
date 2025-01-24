@@ -6,11 +6,15 @@ Rails.application.routes.draw do
         member do
           put :deactivate_tenant
         end
-      
-        resources :tenants, only: [:new, :create]
+        
+        resources :tenants do
+          resources :rents, only: [:index, :new, :create, :show]
+        end
+        
       end
     end
   end
+  
   
   devise_for :admin_users, ActiveAdmin::Devise.config
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

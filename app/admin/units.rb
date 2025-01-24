@@ -43,8 +43,12 @@ ActiveAdmin.register Unit do
       row :floor
       row :selling_rate
       row :status do |unit|
-        status_tag unit.status.titleize, 
-                   class: unit.available_for_rent? ? :green : (unit.sold? ? :red : :orange)
+        if unit.status.present?
+          status_tag unit.status.titleize, 
+                     class: unit.available_for_rent? ? :green : (unit.sold? ? :red : :orange)
+        else
+          status_tag "No Status", class: :gray
+        end
       end
     end
 
@@ -57,7 +61,6 @@ ActiveAdmin.register Unit do
               row :phone
               row :email
               row :active
-             
             end
 
             if unit.active_tenant.lease_agreement.present?
@@ -112,6 +115,30 @@ ActiveAdmin.register Unit do
                 span "No rent payments found"
               end
             end
+          end
+        end
+      end
+
+      # Add a new tab for Scheduled Rents
+      tab "Scheduled Rents" do
+        if unit.active_tenant.present?
+          scheduled_rents = unit.active_tenant.rents.where("due_date >= ?", Date.today).order(due_date: :asc)
+          if scheduled_rents.any?
+            panel "Scheduled Rents" do
+              table_for scheduled_rents do
+                column :amount
+                column :due_date
+                column :status
+              end
+            end
+          else
+            div class: 'blank_slate' do
+              span "No scheduled rents found."
+            end
+          end
+        else
+          div class: 'blank_slate' do
+            span "No active tenant to display scheduled rents."
           end
         end
       end
