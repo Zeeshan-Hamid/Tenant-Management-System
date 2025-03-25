@@ -15,3 +15,510 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+/*Admin Labels*/
+// Base style for status tags
+.status-tag {
+  padding: 3px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+// Specific role styles extending the base class
+.status-administrator {
+  @extend .status-tag;
+  background-color: #007bff; // Green
+  color: #fff;
+}
+
+.status-property-manager {
+  @extend .status-tag;
+  background-color: #28a745; // Yellow
+  color: #fff;
+}
+
+.status-unit-manager {
+  @extend .status-tag;
+  background-color: #fd7e14; // Orange
+  color: #fff;
+}
+
+/* Admin Radio buttons Tooltip container styling */
+.tooltip-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Tooltip hidden by default */
+.tooltip {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+  top: 20px;
+  left: 0;
+  white-space: nowrap;
+}
+
+/* Show tooltip on hover */
+.tooltip-wrapper:hover .tooltip {
+  display: block;
+}
+
+/* Lease agreement property drop down */
+/*Lease agreement units selector*/
+.property-units-selector {
+  margin-bottom: 20px;
+}
+.property-heading {
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-left: 20%;
+  font-size: 1.1em;
+  color: #5e6469;
+}
+.property-units-dropdown {
+  position: relative;
+  width: 30%;
+  margin-left: 20%;
+}
+.dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  color: #2e3438;
+  transition: all 0.2s ease;
+}
+.dropdown-button:hover {
+  border-color: #5e6469;
+  background-color: #f5f5f5;
+  color: #fff;
+}
+.dropdown-arrow {
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+.dropdown-content.visible + .dropdown-button .dropdown-arrow {
+  transform: rotate(180deg);
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 3px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+.dropdown-content.visible {
+  display: block;
+}
+.search-container {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+.unit-search-input {
+  width: 100%;
+  padding: 8px 8px 8px 30px;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  font-size: 0.9em;
+  transition: border-color 0.2s;
+}
+.unit-search-input:focus {
+  border-color: #5e6469;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(94, 100, 105, 0.1);
+}
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 18px;
+  color: #666;
+}
+.units-list {
+  padding: 5px 0;
+}
+.unit-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.15s;
+}
+.unit-item:hover {
+  background-color: #f5f5f5;
+}
+.unit-checkbox {
+  margin-right: 10px;
+  cursor: pointer;
+}
+.unit-checkbox:checked + label {
+  font-weight: 500;
+  color: #2e3438;
+}
+.selected-units {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.selected-unit-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #e6f7ff;
+  color: #0366d6;
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-size: 0.85em;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #cce5ff;
+  transition: background-color 0.2s;
+}
+.selected-unit-tag:hover {
+  background: #d1ebff;
+}
+.remove-unit {
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.remove-unit:hover {
+  opacity: 1;
+}
+.no-units-found {
+  padding: 15px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+.property-dropdown {
+  position: relative;
+  margin-left: 20%;
+  width: 30%;
+}
+#property-dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  color: #2e3438;
+  transition: all 0.2s ease;
+}
+#property-dropdown-button:hover {
+  border-color: #5e6469;
+  background-color: #f5f5f5;
+  color: #000;
+}
+#property-dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 3px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+#property-dropdown-content.visible {
+  display: block;
+}
+.property-search-input {
+  width: 100%;
+  padding: 8px 8px 8px 30px;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  font-size: 0.9em;
+  transition: border-color 0.2s;
+}
+.property-search-input:focus {
+  border-color: #5e6469;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(94, 100, 105, 0.1);
+}
+.properties-list {
+  padding: 5px 0;
+}
+.property-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.property-item:hover {
+  background-color: #f5f5f5;
+}
+.selected-property {
+  font-weight: 500;
+  color: #2e3438;
+}
+
+/*Property type selector*/
+
+.property-type-selector {
+  margin-bottom: 20px;
+}
+
+.property-type-dropdown {
+  position: relative;
+  width: 30%;
+  margin-left: 20%;
+}
+
+.dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-button:hover {
+  border-color: #5a5a5a;
+}
+
+.dropdown-arrow {
+  margin-left: 10px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 3px;
+  background: white;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.dropdown-content.visible {
+  display: block;
+}
+
+.search-container {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  background: white;
+}
+
+.type-search-input {
+  width: 100%;
+  padding: 6px 8px 6px 30px;
+  border: 1px solid #c9d0d6;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  color: #666;
+}
+
+.type-list {
+  padding: 5px 0;
+}
+
+.type-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.type-item:hover {
+  background-color: #f5f5f5;
+}
+
+
+
+// Property-Lease selector
+
+/* admin_property_lease_selector.css */
+
+.admin-property-lease-selector {
+  margin-bottom: 20px;
+}
+
+.apl-property-dropdown,
+.apl-lease-dropdown {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.apl-dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  margin-left: 20%;
+  padding: 10px 15px;
+  background-color: white ;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+.apl-dropdown-arrow {
+  color: #666;
+  font-size: 12px;
+}
+
+.apl-dropdown-content {
+  display: none;
+  position: absolute;
+  width: 50%;
+  margin-left: 20%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.apl-dropdown-content.visible {
+  display: block;
+}
+
+.apl-search-container {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.apl-search-icon {
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  color: #999;
+  font-size:
+  12px;
+}
+
+.apl-property-search-input,
+.apl-lease-search-input {
+  width: 100%;
+  padding: 8px 8px 8px 25px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.apl-properties-list,
+.apl-lease-list {
+  padding: 5px 0;
+}
+
+.apl-property-item {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.apl-property-item:hover {
+  background-color: #f5f5f5;
+}
+
+.apl-lease-item {
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+}
+
+.apl-lease-item label {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.apl-selected-leases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.apl-selected-leases > *:first-child {
+  margin-left: 20%;
+}
+
+.apl-selected-leases > *:not(:first-child) {
+  margin-left: 5px;
+}
+
+
+.apl-selected-lease-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0f0ff;
+  border-radius: 16px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.apl-remove-lease {
+  margin-left: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+}
+
+.apl-remove-lease:hover {
+  color: #f00;
+}
+
+.apl-property-section {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.apl-no-leases {
+  color: #999;
+  font-style: italic;
+}

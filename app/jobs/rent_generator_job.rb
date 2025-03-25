@@ -1,28 +1,23 @@
-# app/jobs/rent_generator_job.rb
+# frozen_string_literal: true
+
 class RentGeneratorJob < ApplicationJob
   queue_as :default
 
   def perform
-    current_month = Date.today.beginning_of_month
-    due_date = current_month + 10.days
+    return unless Date.today.day == 1
 
-    Tenant.where(active: true).find_each do |tenant|
-      next unless tenant.lease_agreement.present?
+    Tenant.active.find_each do |tenant|
+      next if Rent.exists?(tenant: tenant, payment_date: Date.today.beginning_of_month)
 
-      begin
-        unless tenant.rents.where(month: current_month).exists?
-          tenant.rents.create!(
-            amount: tenant.lease_agreement.rent_amount,
-            month: current_month,
-            due_date: due_date,
-            payment_date: due_date,
-            status: 'pending',
-            unit: tenant.unit
-          )
-        end
-      rescue => e
-        Rails.logger.error "Error generating rent for Tenant #{tenant.id}: #{e.message}"
-      end
+      Rent.create!(
+        tenant: tenant,
+        unit: tenant.unit, # Assuming tenant has a unit association
+        amount: tenant.monthly_rent,
+        payment_date: Date.today.beginning_of_month,
+        status: "pending"
+      )
+    rescue StandardError => e
+      Rails.logger.error "Failed to create rent record for tenant #{tenant.id}: #{e.message}"
     end
   end
 end

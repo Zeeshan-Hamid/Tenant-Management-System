@@ -9,6 +9,6 @@ class CreateTenants < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :tenants, [:unit_id, :active], unique: true, where: "active", name: "unique_active_tenant_per_unit"
+    add_index :tenants, [ :unit_id, :active ], unique: true, where: "active", name: "unique_active_tenant_per_unit"
   end
 end

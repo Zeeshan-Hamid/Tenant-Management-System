@@ -1,0 +1,108 @@
+<div class="admin-property-lease-selector">
+  <div class="apl-property-selector">
+    <div class="apl-property-dropdown">
+      <button type="button" class="apl-dropdown-button" id="apl-property-dropdown-button">
+        <span class="apl-selected-property">Select a property</span>
+        <span class="apl-dropdown-arrow">▼</span>
+      </button>
+      <div class="apl-dropdown-content" id="apl-property-dropdown-content">
+        <div class="apl-search-container">
+          <span class="apl-search-icon"></span>
+          <input type="text" class="apl-property-search-input" placeholder="Search properties...">
+        </div>
+        <div class="apl-properties-list">
+          <% properties.each do |property| %>
+            <div class="apl-property-item" data-property-id="<%= property.id %>">
+              <%= property.name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% 
+  user_property_hash = {}
+  user.user_properties.each do |up|
+    user_property_hash[up.property_id] = up
+  end
+  
+  properties.each do |property| 
+    user_property = user_property_hash[property.id] || user.user_properties.build(property_id: property.id)
+  %>
+    <div class="apl-property-section" data-property-id="<%= property.id %>" style="display: none;">
+      <% if user_property.persisted? %>
+        <%= hidden_field_tag "user[user_properties_attributes][#{property.id}][id]", 
+                            user_property.id, 
+                            id: "user_user_properties_attributes_#{property.id}_id" %>
+      <% end %>
+      
+      <% 
+      # For all properties, show all available lease agreements for this property
+      # If a property is already assigned to the user, we'll pre-select those lease agreements
+      available_las = available_lease_agreements[property.id] || []
+      %>
+      
+      <% if available_las.any? %>
+        <div class="apl-lease-dropdown">
+          <% selected_la_ids = user_property.lease_agreements.active.pluck(:id) %>
+          <% selected_count = selected_la_ids.size %>
+          
+          <button type="button" class="apl-dropdown-button">
+            <span class="apl-selected-count">
+              <%= selected_count > 0 ? "#{selected_count} lease agreement#{selected_count > 1 ? 's' : ''} selected" : "Select lease agreements" %>
+            </span>
+            <span class="apl-dropdown-arrow">▼</span>
+          </button>
+          
+          <div class="apl-dropdown-content">
+            <div class="apl-search-container">
+              <span class="apl-search-icon"></span>
+              <input type="text" class="apl-lease-search-input" placeholder="Search lease agreements...">
+            </div>
+            
+            <div class="apl-lease-list">
+              <% available_las.each do |la| %>
+                <% unit_names = la.units.map(&:unit_number).join(', ') %>
+                <% label_text = "Lease Agreement ##{la.id} (#{la.status}) - Units: #{unit_names}" %>
+                <div class="apl-lease-item">
+                  <%= check_box_tag "user[user_properties_attributes][#{property.id}][lease_agreement_ids][]", 
+                                    la.id, 
+                                    selected_la_ids.include?(la.id), 
+                                    id: "user_user_properties_attributes_#{property.id}_lease_agreement_ids_#{la.id}", 
+                                    class: "apl-lease-checkbox" %>
+                  <label for="user_user_properties_attributes_<%= property.id %>_lease_agreement_ids_<%= la.id %>">
+                    <%= label_text %>
+                  </label>
+                </div>
+              <% end %>
+              
+              <!-- Add a hidden empty input to ensure params array exists even when all checkboxes are unchecked -->
+              <%= hidden_field_tag "user[user_properties_attributes][#{property.id}][lease_agreement_ids][]", "" %>
+            </div>
+          </div>
+          
+          
+        </div>
+      <% else %>
+        <p class="apl-no-leases">No available lease agreements for this property</p>
+      <% end %>
+      
+      <%= hidden_field_tag "user[user_properties_attributes][#{property.id}][property_id]", 
+                          property.id, 
+                          id: "user_user_properties_attributes_#{property.id}_property_id" %>
+      
+      <!-- Add this to enable deletion of the property association -->                       
+      <div class="apl-property-actions">
+        <% if user_property.persisted? && selected_la_ids.empty? %>
+          <%= hidden_field_tag "user[user_properties_attributes][#{property.id}][_destroy]", 
+                            "1", 
+                            id: "user_user_properties_attributes_#{property.id}_destroy",
+                            class: "destroy-property-flag" %>
+                            
+          <p class="apl-status-message">This property will be removed when saving</p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  trackable_type: MyString
+  trackable_id: 1
+  owner_id: 1
+  owner_type: MyString
+  recipient_type: MyString
+  recipient_id: 1
+  key: MyString
+  parameters: MyText
+
+two:
+  trackable_type: MyString
+  trackable_id: 1
+  owner_id: 1
+  owner_type: MyString
+  recipient_type: MyString
+  recipient_id: 1
+  key: MyString
+  parameters: MyText

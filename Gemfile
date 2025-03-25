@@ -16,8 +16,17 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+gem "public_activity"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
+gem "nio4r", "=2.7.4"
+gem "mina"
+gem "jwt"
+gem "bcrypt"
+gem "active_model_serializers"
+gem "kaminari"
+
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -30,23 +39,27 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
+gem "validates_timeliness", "~> 7.0"
+
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
-gem 'country_select', '~> 7.0' # Check for latest version
-gem 'countries' 
-gem 'devise'        # Active Admin depends on Devise for authentication
-gem 'activeadmin'
-gem 'sassc-rails'
-gem 'faker'
-gem 'rubocop', require: false
-gem 'rubocop-rails', require: false # Optional, for Rails-specific linting
+gem "twilio-ruby" # for SMS Service
+gem "devise"        # Active Admin depends on Devise for authentication
+gem "activeadmin"
+gem "sassc-rails"
+gem "faker"
+gem "rubocop", require: false
+gem "rubocop-rails", require: false # Optional, for Rails-specific linting
+gem "sidekiq"
+gem "whenever", require: false
+gem "country_select"
+gem "countries"
+gem "sidekiq-scheduler"
+gem "sidekiq-cron", "~> 1.2"
+gem "cancancan", "~> 3.2"
 
-gem 'whenever', require: false
 
-gem 'sucker_punch'
-
-gem 'whenever', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

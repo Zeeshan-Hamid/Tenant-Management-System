@@ -1,31 +1,23 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  api:
+    rent:
+      errors:
+        lease_not_found: "Lease Agreement not found."
+        no_pending_rent: "Payment cannot be made because no pending rent exists."
+        mark_as_paid_failure: "Failed to mark rent (ID: %{id}) as paid."
+        update_partial_failure: "Failed to update rent (ID: %{id}) to partially unpaid ."
+        payment_amount_exceeds: "Payment amount exceeds the amount due (%{currency} %{amount})."
+    lease_agreement:
+      errors:
+        property_not_found: "Property not found or not assigned to you."
+        lease_not_found: "Lease Agreement not found."
+    authentication:
+      errors:
+        phone_number_required: "phone_number is required"
+        otp_required: "otp is required"
+        user_not_found: "User not found"
+  admin_user:
+    errors:
+      password_confirmation: "Incorrect password confirmation. Please re-enter your password."
+      administrator_only: "Only Super Admin can create new admin users."
+      administrator_edit: "Super Admin cannot be edited."

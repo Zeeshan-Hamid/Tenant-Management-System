@@ -1,0 +1,7 @@
+:verbose: false
+:concurrency: 5
+:queues:
+  - [default, 1]
+:scheduler:
+  :enabled: true
+  :schedule_file: config/sidekiq_schedule.yml

@@ -1,0 +1,51 @@
+image: ruby:3.2.0 # Replace with your Ruby version
+
+pipelines:
+  branches:
+    main: # Replace with your branch name if it's not 'main'
+      - step:
+          name: Deploy to main branch
+          caches:
+            - bundler
+          script:
+            - echo "Starting deployment pipeline..."
+            # 1. Install SSH on the pipeline container
+            - apt-get update && apt-get install -y ssh
+
+            # 2. Configure SSH key
+            - mkdir -p ~/.ssh
+            - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            - chmod 600 ~/.ssh/id_rsa
+            - ssh-keyscan -H 143.110.175.124 >> ~/.ssh/known_hosts
+
+            # 3. Deploy the application
+            - |
+              ssh root@143.110.175.124 << 'EOF'
+
+              # Navigate to the application directory
+              cd /home/ubuntu/project/kiraaya
+
+              # Pull the latest changes from the specific deployment branch
+              git pull origin main
+
+              # Install any new dependencies
+              /root/.rbenv/shims/bundle install --without development test
+
+              # Run database migrations and precompile assets
+              RAILS_ENV=production /root/.rbenv/shims/rails db:migrate
+              RAILS_ENV=production /root/.rbenv/shims/rails assets:precompile
+
+              # Restart Nginx service
+              systemctl restart nginx
+
+              # Kill any running Puma processes (if any)
+              pkill -f puma
+
+              # Start Puma with the updated code
+              /root/.rbenv/shims/bundle exec puma -C config/puma.rb &
+              EOF
+
+            - echo "Deployment completed successfully!"
+definitions:
+  caches:
+    bundler: ~/.bundle

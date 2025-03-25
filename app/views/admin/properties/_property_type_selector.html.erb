@@ -1,0 +1,29 @@
+<div class="property-type-selector">
+  <div class="property-type-dropdown">
+    <% property_types ||= Property.property_types.keys %>
+    <% selected_type = property.property_type.presence %>
+    <button type="button" class="dropdown-button">
+      <span class="selected-value">
+        <%= selected_type ? selected_type.titleize : "Select property type" %>
+      </span>
+      <span class="dropdown-arrow">▼</span>
+    </button>
+    <div class="dropdown-content">
+      <div class="search-container">
+        <span class="search-icon"></span>
+        <input type="text" class="type-search-input" placeholder="Search property types...">
+      </div>
+      <div class="type-list">
+        <% property_types.each do |type| %>
+          <div class="type-item" data-value="<%= type %>">
+            <%= type.titleize %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <%= f.hidden_field :property_type, value: selected_type %>
+  </div>
+</div>
+
+
+

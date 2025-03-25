@@ -8,3 +8,13 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+Layout/IndentationWidth:
+  Width: 2 # Common choices are 2 or 4 spaces.
+
+# Enforce consistent indentation for internal methods and blocks.
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods # Ensures internal methods are indented relative to the outer scope.
+
+# Specify whether to use spaces or tabs for indentation.
+Layout/IndentationStyle:
+  EnforcedStyle: spaces # Use 'spaces' or 'tabs' depending on your preference.

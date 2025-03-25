@@ -3,6 +3,7 @@ ActiveAdmin.setup do |config|
   #
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
+
   #
   config.site_title = "Tenant Management System"
 
@@ -121,6 +122,7 @@ ActiveAdmin.setup do |config|
   #
   # Default:
   config.logout_link_path = :destroy_admin_user_session_path
+  config.logout_link_method = :delete
 
   # This setting changes the http method used when rendering the
   # link. For example :get, :delete, :put, etc..
@@ -174,7 +176,7 @@ ActiveAdmin.setup do |config|
   # You can exclude possibly sensitive model attributes from being displayed,
   # added to forms, or exported by default by ActiveAdmin
   #
-  config.filter_attributes = [:encrypted_password, :password, :password_confirmation]
+  config.filter_attributes = [ :encrypted_password, :password, :password_confirmation ]
 
   # == Localize Date/Time Format
   #
@@ -321,6 +323,11 @@ ActiveAdmin.setup do |config|
   #    :email,
   #  ]
   # config.filter_method_for_large_association = '_start'
+
+  config.authorization_adapter = ActiveAdmin::CanCanAdapter
+
+  # This tells the adapter which Ability class to use (if you named it differently, update here)
+  config.cancan_ability_class = "Ability"
 
   # == Head
   #

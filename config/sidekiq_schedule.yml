@@ -1,4 +1,5 @@
-rent_generation_job:
-  cron: "0 0 1 * *" # Run at midnight on the 1st of every month
-  class: "RentGeneratorWorker"
-  description: "Monthly rent generation for active tenants"
+rent_generator:
+  cron: "0 * * * *"
+  class: RentGeneratorWorker
+  queue: default
+  description: "Generates rent records for active lease agreements every hour"

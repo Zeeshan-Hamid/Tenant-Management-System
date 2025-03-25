@@ -1,0 +1,65 @@
+<div class="property-units-selector">
+  <div class="property-selector">
+    <div class="property-dropdown">
+      <button type="button" class="dropdown-button" id="property-dropdown-button">
+        <span class="selected-property">Select a property</span>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+      <div class="dropdown-content" id="property-dropdown-content">
+        <div class="search-container">
+          <span class="search-icon"></span>
+          <input type="text" class="property-search-input" placeholder="Search properties...">
+        </div>
+        <div class="properties-list">
+          <% available_property_units.keys.each do |property| %>
+            <div class="property-item" data-property-id="<%= property.id %>">
+              <%= property.name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <% available_property_units.each do |property, available_units| %>
+    <div class="property-section" data-property-id="<%= property.id %>" style="display: none;">
+      <div class="property-heading"></div>
+      <div class="property-units-dropdown">
+        <% selected_unit_ids = lease_agreement.unit_ids & available_units.map(&:id) %>
+        <% selected_count = selected_unit_ids.size %>
+        <button type="button" class="dropdown-button">
+          <span class="selected-count">
+            <%= selected_count > 0 ? "#{selected_count} unit#{selected_count > 1 ? 's' : ''} selected" : "Select units" %>
+          </span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="dropdown-content">
+          <div class="search-container">
+            <span class="search-icon"></span>
+            <input type="text" class="unit-search-input" placeholder="Search units...">
+          </div>
+          <div class="units-list">
+            <% available_units.each do |unit| %>
+              <div class="unit-item">
+                <%= check_box_tag "lease_agreement[unit_ids][]", unit.id, selected_unit_ids.include?(unit.id), id: "lease_agreement_unit_ids_#{unit.id}", class: "unit-checkbox" %>
+                <label for="lease_agreement_unit_ids_<%= unit.id %>"><%= unit.unit_number %></label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="selected-units">
+          <% selected_unit_ids.each do |unit_id| %>
+            <% unit = available_units.find { |u| u.id == unit_id } %>
+            <% if unit %>
+              <div class="selected-unit-tag" data-unit-id="<%= unit.id %>">
+                <%= unit.unit_number %>
+                <span class="remove-unit" onclick="document.getElementById('lease_agreement_unit_ids_<%= unit.id %>').click()">×</span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_04_074722) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,32 +28,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
   end
 
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
+  create_table "activities", force: :cascade do |t|
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.string "owner_type"
+    t.bigint "owner_id"
+    t.string "key"
+    t.text "parameters"
+    t.string "recipient_type"
+    t.bigint "recipient_id"
     t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
-    t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.datetime "updated_at", null: false
+    t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
+    t.index ["owner_type", "owner_id"], name: "index_activities_on_owner"
+    t.index ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
+    t.index ["recipient_type", "recipient_id"], name: "index_activities_on_recipient"
+    t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
+    t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -64,13 +55,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "access_level", default: 3, null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "lease_agreement_units", force: :cascade do |t|
+    t.bigint "lease_agreement_id", null: false
+    t.bigint "unit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lease_agreement_id"], name: "index_lease_agreement_units_on_lease_agreement_id"
+    t.index ["unit_id"], name: "index_lease_agreement_units_on_unit_id"
+  end
+
   create_table "lease_agreements", force: :cascade do |t|
     t.bigint "tenant_id", null: false
-    t.bigint "unit_id", null: false
     t.date "start_date"
     t.date "end_date"
     t.decimal "rent_amount"
@@ -81,14 +81,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.decimal "annual_increment"
     t.string "increment_frequency"
     t.string "increment_type"
+    t.bigint "property_id"
+    t.integer "pending_rent", default: 0, null: false
+    t.index ["property_id"], name: "index_lease_agreements_on_property_id"
     t.index ["tenant_id"], name: "index_lease_agreements_on_tenant_id"
-    t.index ["unit_id"], name: "index_lease_agreements_on_unit_id"
   end
 
   create_table "properties", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.string "property_type"
     t.string "address"
     t.string "city"
     t.string "state"
@@ -98,11 +99,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "units_count"
+    t.integer "property_type"
   end
 
   create_table "rents", force: :cascade do |t|
-    t.bigint "unit_id", null: false
-    t.bigint "tenant_id", null: false
     t.decimal "amount"
     t.date "payment_date"
     t.string "status"
@@ -110,9 +110,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.datetime "updated_at", null: false
     t.boolean "is_advance"
     t.date "due_date"
-    t.date "month"
-    t.index ["tenant_id"], name: "index_rents_on_tenant_id"
-    t.index ["unit_id"], name: "index_rents_on_unit_id"
+    t.bigint "lease_agreement_id", null: false
+    t.string "payment_method"
+    t.integer "amount_paid"
+    t.index ["lease_agreement_id"], name: "index_rents_on_lease_agreement_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -120,13 +121,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.string "phone"
     t.string "email"
     t.boolean "active"
-    t.bigint "unit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "balance", default: "0.0"
     t.decimal "advance_credit", precision: 10, scale: 2, default: "0.0", null: false
-    t.index ["unit_id", "active"], name: "unique_active_tenant_per_unit", unique: true, where: "active"
-    t.index ["unit_id"], name: "index_tenants_on_unit_id"
+    t.string "cnic"
+    t.string "receipt_image", default: [], array: true
   end
 
   create_table "units", force: :cascade do |t|
@@ -136,18 +136,48 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_23_093930) do
     t.integer "square_footage"
     t.decimal "rental_rate"
     t.decimal "selling_rate"
-    t.string "status", default: "0", null: false
+    t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_units_on_property_id"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  create_table "user_lease_agreements", force: :cascade do |t|
+    t.bigint "user_property_id", null: false
+    t.bigint "lease_agreement_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lease_agreement_id"], name: "index_user_lease_agreements_on_lease_agreement_id"
+    t.index ["user_property_id"], name: "index_user_lease_agreements_on_user_property_id"
+  end
+
+  create_table "user_properties", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "property_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["property_id"], name: "index_user_properties_on_property_id"
+    t.index ["user_id", "property_id"], name: "index_user_properties_on_user_id_and_property_id", unique: true
+    t.index ["user_id"], name: "index_user_properties_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name", default: "", null: false
+    t.string "phone_number", default: "", null: false
+    t.boolean "profile_completed", default: false, null: false
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
+  end
+
+  add_foreign_key "lease_agreement_units", "lease_agreements"
+  add_foreign_key "lease_agreement_units", "units"
+  add_foreign_key "lease_agreements", "properties"
   add_foreign_key "lease_agreements", "tenants"
-  add_foreign_key "lease_agreements", "units"
-  add_foreign_key "rents", "tenants"
-  add_foreign_key "rents", "units"
-  add_foreign_key "tenants", "units"
+  add_foreign_key "rents", "lease_agreements"
   add_foreign_key "units", "properties"
+  add_foreign_key "user_lease_agreements", "lease_agreements"
+  add_foreign_key "user_lease_agreements", "user_properties"
+  add_foreign_key "user_properties", "properties"
+  add_foreign_key "user_properties", "users"
 end
